@@ -15,6 +15,7 @@ httpx==0.12.1             # via -r requirements.in
 hyperframe==5.2.0         # via h2
 idna==2.9                 # via httpx
 loguru==0.4.1             # via -r requirements.in
+pillow==7.1.2             # via -r requirements.in
 rfc3986==1.4.0            # via httpx
 sniffio==1.1.0            # via httpx
 urllib3==1.25.9           # via httpx
