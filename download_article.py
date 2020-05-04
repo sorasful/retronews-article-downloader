@@ -95,16 +95,28 @@ async def download_page_from_article(article_url: str, page: int):
             await loop.run_in_executor(executor, reconstruct_article_image, page, dirname )
 
 
-def download_page_from_article_url(article_url: str, page: int):
+def download_page(article_url: str, page: int):
     """
-    Allows to download a specific page into a JPG image from retronews URL.
+    Allows to download a specific page into a JPG image from retronews.fr URL.
     :param article_url: The url of the article
     :param page: The page you want to get
     """
     asyncio.get_event_loop().run_until_complete(download_page_from_article(article_url, page=page))
 
 
+def download_all_pages(article_url: str):
+    """
+    Allows to download all pages into JPG images from retronews.fr URL.
+    :param article_url: The url of the article
+    """
+    asyncio.get_event_loop().run_until_complete(download_full_article(article_url))
+
+
+
 if __name__ == '__main__':
-    fire.Fire(download_page_from_article_url)
+    fire.Fire({
+        'download_page': download_page,
+        'download_all_pages': download_all_pages
+    })
 
     logger.info("Program finished.")
