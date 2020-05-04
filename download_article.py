@@ -1,5 +1,6 @@
 import asyncio
 import sys
+from concurrent.futures.process import ProcessPoolExecutor
 from pathlib import Path
 
 import aiofiles
@@ -86,18 +87,18 @@ async def download_page_from_article(article_url: str, page: int):
         await os.mkdir(dirname)
 
     async with httpx.AsyncClient(timeout=None) as client:
-        # await download_one_article_page(client, dirname, id1, id2, page)
-        reconstruct_article_image(page_to_reconstruct=page, directory_holding_images=dirname)
+        await download_one_article_page(client, dirname, id1, id2, page)
+
+        with ProcessPoolExecutor() as executor:
+            loop = asyncio.get_event_loop()
+            await loop.run_in_executor(executor, reconstruct_article_image, page, dirname )
 
 
 async def main(article_url: str):
-    await download_page_from_article(article_url, page=3)
+    await download_page_from_article(article_url, page=2)
 
 
 if __name__ == '__main__':
-    # https://github.com/encode/httpx/issues/914
-    if sys.version_info[0] == 3 and sys.version_info[1] >= 8 and sys.platform.startswith('win'):
-        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
     article_url = "https://www.retronews.fr/journal/le-petit-marseillais/24-mars-1938/437/1806613/1"
 
