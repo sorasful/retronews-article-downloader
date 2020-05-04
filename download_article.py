@@ -4,6 +4,7 @@ from concurrent.futures.process import ProcessPoolExecutor
 from pathlib import Path
 
 import aiofiles
+import fire
 import httpx
 from aiofiles import os
 from loguru import logger
@@ -94,14 +95,16 @@ async def download_page_from_article(article_url: str, page: int):
             await loop.run_in_executor(executor, reconstruct_article_image, page, dirname )
 
 
-async def main(article_url: str):
-    await download_page_from_article(article_url, page=2)
+def download_page_from_article_url(article_url: str, page: int):
+    """
+    Allows to download a specific page into a JPG image from retronews URL.
+    :param article_url: The url of the article
+    :param page: The page you want to get
+    """
+    asyncio.get_event_loop().run_until_complete(download_page_from_article(article_url, page=page))
 
 
 if __name__ == '__main__':
-
-    article_url = "https://www.retronews.fr/journal/le-petit-marseillais/24-mars-1938/437/1806613/1"
-
-    asyncio.run(main(article_url=article_url))
+    fire.Fire(download_page_from_article_url)
 
     logger.info("Program finished.")
