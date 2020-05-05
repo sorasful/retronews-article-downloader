@@ -33,7 +33,7 @@ For example, the command :
 will produce `4437-11806613-4.jpg`  so you can use `docker cp` to get the image you seek.
 
 Or you can mount a volume like this :  
-`docker run -v $(pwd)/result:/app/results bnf download_page https://www.retronews.fr/journal/le-petit-marseillais/24-mars-1938/437/1806613/ 4`
+`docker run -v $(pwd)/result:/app/results retronews-downloader download_page https://www.retronews.fr/journal/le-petit-marseillais/24-mars-1938/437/1806613/ 4`
 
 
 ## Disclaimer
