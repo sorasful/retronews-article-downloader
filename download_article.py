@@ -27,7 +27,7 @@ async def download_image_from_url(url: str, client, filename: str):
     :return:
     """
     response = await client.get(url)
-    logger.info(f"Waiting for url {url} {response.status_code}")
+    logger.debug(f"Waiting for url {url} {response.status_code}")
     if response.status_code != 200:
         return
     async with aiofiles.open(filename, 'wb') as f:
@@ -77,7 +77,9 @@ async def download_full_article(article_url):
             await download_one_article_page(client, dirname, id1, id2, page)
             await asyncio.sleep(0.3)
 
-            reconstruct_article_image(page_to_reconstruct=page, directory_holding_images=dirname)
+            with ProcessPoolExecutor() as executor:
+                loop = asyncio.get_event_loop()
+                await loop.run_in_executor(executor, reconstruct_article_image, page, dirname)
 
 
 async def download_page_from_article(article_url: str, page: int):
@@ -112,8 +114,10 @@ def download_all_pages(article_url: str):
     asyncio.get_event_loop().run_until_complete(download_full_article(article_url))
 
 
-
 if __name__ == '__main__':
+    logger.remove()
+    logger.add(sys.stderr, format="{time} {level} {message}",  level="INFO")
+
     fire.Fire({
         'download_page': download_page,
         'download_all_pages': download_all_pages

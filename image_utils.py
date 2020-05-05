@@ -33,4 +33,5 @@ def reconstruct_article_image(page_to_reconstruct: int, directory_holding_images
         image = Image.open(img)
         result_img.paste(image, (row * width, col * height))
 
-    result_img.save(f'{directory_holding_images}-{page_to_reconstruct}.jpg')
+    store_to = Path('results') / f'{directory_holding_images}-{page_to_reconstruct}.jpg'
+    result_img.save(store_to)
